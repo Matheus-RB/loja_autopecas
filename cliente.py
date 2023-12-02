@@ -4,7 +4,7 @@ class Cliente:
         self.__telefone = telefone
         self.__endereco = endereco
 
-    def obter_dados_para_banco(self):
+    def obter_dados(self):
         return self.__nome, self.__telefone, self.__endereco
 
     def __str__(self):
