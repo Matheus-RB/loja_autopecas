@@ -79,36 +79,48 @@ def criar_tabelas(conn):
             cursor.close()
 
 def adicionar_produto(conn, produto):
+    cursor = None
     try:
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO produtos (nome, preco, quantidade) VALUES (%s, %s, %s)
         ''', produto.obter_dados())
         conn.commit()
+
+        id_produto = cursor.lastrowid
+        print(f"\nProduto cadastrado com sucesso! ID do produto: {id_produto}")
+        return id_produto
+    
     except mysql.connector.Error as err:
         print(f"Erro: {err}")
     finally:
-        if 'cursor' in locals():
+        if cursor:
             cursor.close()
-        if 'connection' in locals():
+        if conn.is_connected():
             conn.close()
 
 def adicionar_cliente(conn, cliente):
+    cursor = None
     try:
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO clientes (nome, telefone, endereco) VALUES (%s, %s, %s)
         ''', cliente.obter_dados())
         conn.commit()
+
+        id_cliente = cursor.lastrowid
+        print(f"\nCliente cadastrado com sucesso! ID do cliente: {id_cliente}")
+        return id_cliente
     except mysql.connector.Error as err:
         print(f"Erro: {err}")
     finally:
-        if 'cursor' in locals():
+        if cursor:
             cursor.close()
-        if 'connection' in locals():
+        if conn.is_connected():
             conn.close()
 
 def adicionar_venda(conn, venda):
+    cursor = None
     try:
         cursor = conn.cursor()
 
@@ -124,10 +136,13 @@ def adicionar_venda(conn, venda):
         return None
 
     finally:
-        if 'cursor' in locals():
+        if cursor:
             cursor.close()
+        if conn.is_connected():
+            conn.close()
 
 def atualizar_estoque(conn, produto_id, quantidade):
+    cursor = None
     try:
         cursor = conn.cursor()
 
@@ -141,10 +156,13 @@ def atualizar_estoque(conn, produto_id, quantidade):
         print(f"Erro ao atualizar estoque: {err}")
 
     finally:
-        if 'cursor' in locals():
+        if cursor:
             cursor.close()
+        if conn.is_connected():
+            conn.close()
 
 def adicionar_item_venda(conn, venda_id, produto_id, quantidade, subtotal):
+    cursor = None
     try:
         cursor = conn.cursor()
 
@@ -158,10 +176,13 @@ def adicionar_item_venda(conn, venda_id, produto_id, quantidade, subtotal):
         print(f"Erro ao adicionar item à venda: {err}")
 
     finally:
-        if 'cursor' in locals():
+        if cursor:
             cursor.close()
+        if conn.is_connected():
+            conn.close()
 
 def cliente_existe(conn, cliente_id):
+    cursor = None
     try:
         cursor = conn.cursor()
 
@@ -176,10 +197,13 @@ def cliente_existe(conn, cliente_id):
         return False
 
     finally:
-        if 'cursor' in locals():
+        if cursor:
             cursor.close()
+        if conn.is_connected():
+            conn.close()
 
 def produto_existe(conn, produto_id):
+    cursor = None
     try:
         cursor = conn.cursor()
 
@@ -194,10 +218,13 @@ def produto_existe(conn, produto_id):
         return False
 
     finally:
-        if 'cursor' in locals():
+        if cursor:
             cursor.close()
+        if conn.is_connected():
+            conn.close()
 
 def obter_preco_produto(conn, produto_id):
+    cursor = None
     try:
         cursor = conn.cursor()
 
@@ -212,10 +239,13 @@ def obter_preco_produto(conn, produto_id):
         return None
 
     finally:
-        if 'cursor' in locals():
+        if cursor:
             cursor.close()
+        if conn.is_connected():
+            conn.close()
 
 def consultar_estoque(conn):
+    cursor = None
     try:
         cursor = conn.cursor()
 
@@ -233,10 +263,13 @@ def consultar_estoque(conn):
         print(f"Erro ao consultar estoque: {err}")
 
     finally:
-        if 'cursor' in locals():
+        if cursor:
             cursor.close()
+        if conn.is_connected():
+            conn.close()
 
 def gerar_relatorio(conn):
+    cursor = None
     try:
         cursor = conn.cursor()
 
@@ -259,5 +292,7 @@ def gerar_relatorio(conn):
         print(f"Erro ao gerar relatório: {err}")
 
     finally:
-        if 'cursor' in locals():
+        if cursor:
             cursor.close()
+        if conn.is_connected():
+            conn.close()
