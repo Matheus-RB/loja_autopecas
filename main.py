@@ -1,69 +1,54 @@
-import database as db
-from produto import Produto
-from cliente import Cliente
-from venda import Venda
-from datetime import datetime
+import tkinter as tk
+from Views.cliente import ClienteView
+from Views.produto import ProdutoView
+from Views.venda import VendaView
+from Views.relatorio import RelatorioView
+from Views.estoque import EstoqueView
 
-def main():
-    db.criar_banco_dados()
-    conn = db.conectar_banco_dados()
+class MainApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Sistema de Cadastros")
 
-    if conn:
-        db.criar_tabelas(conn)
+        cliente_button = tk.Button(root, text="Cadastrar Cliente", command=self.cadastrar_cliente)
+        cliente_button.pack(pady=10)
+        
+        produto_button = tk.Button(root, text="Cadastrar Produto", command=self.cadastrar_produto)
+        produto_button.pack(pady=10)
+        
+        venda_button = tk.Button(root, text="Realizar Venda", command=self.realizar_venda)
+        venda_button.pack(pady=10)
+        
+        estoque_button = tk.Button(root, text="Consultar Estoque", command=self.consultar_estoque)
+        estoque_button.pack(pady=10)
+        
+        relatorio_button = tk.Button(root, text="Gerar Relatório", command=self.gerar_relatorio)
+        relatorio_button.pack(pady=10)
+        
+        exit_button = tk.Button(root, text="Sair", command=root.quit)
+        exit_button.pack(pady=10)
 
-        while True:
-            print("\n1. Adicionar Cliente\n2. Adicionar Produto\n3. Realizar Venda\n4. Consultar Estoque\n5. Gerar Relatório\n6. Sair")
-            escolha = input("Escolha uma opção: ")
+    def cadastrar_cliente(self):
+        root = tk.Toplevel(self.root)
+        cliente_view = ClienteView(root)
+  
+    def cadastrar_produto(self):
+        root = tk.Toplevel(self.root)
+        produto_view = ProdutoView(root)
+        
+    def realizar_venda(self):
+        root = tk.Toplevel(self.root)
+        venda_view = VendaView(root)
 
-            if escolha == "1":
-                nome = input("\nDigite o nome do cliente: ")
-                telefone = input("Digite o telefone do cliente: ")
-                endereco = input("Digite o endereço do cliente: ")
-
-                novo_cliente = Cliente(nome=nome, telefone=telefone, endereco=endereco)
-                db.adicionar_cliente(conn, novo_cliente)
-            
-            elif escolha == "2":
-                nome = input("\nNome do produto: ")
-                preco = float(input("Preço do produto: "))
-                quantidade = int(input("Quantidade: "))
-                
-                novo_produto = Produto(nome=nome, preco=preco, quantidade=quantidade)
-                db.adicionar_produto(conn, novo_produto)
-
-
-            elif escolha == "3":
-                cliente_id = int(input("\nID do cliente: "))
-                produto_id = int(input("ID do produto a ser vendido: "))
-                quantidade = int(input("Quantidade a ser vendida: "))
-
-                if db.cliente_existe(conn, cliente_id) and db.produto_existe(conn, produto_id):
-                    preco_produto = db.obter_preco_produto(conn, produto_id)
-                    total = quantidade * preco_produto
-
-                    venda = Venda(data=datetime.now(), total=total, cliente_id=cliente_id)
-                    venda_id = db.adicionar_venda(conn, venda)
-
-                    db.atualizar_estoque(conn, produto_id, quantidade)
-                    db.adicionar_item_venda(conn, venda_id, produto_id, quantidade, total)
-
-                    print(f"\nVenda realizada com sucesso! ID da venda: {venda_id}")
-                else:
-                    print("\nCliente ou produto não encontrado. Verifique os IDs e tente novamente.")
-
-            elif escolha == "4":
-                db.consultar_estoque(conn)
-
-            elif escolha == "5":
-                db.gerar_relatorio(conn)
-
-            elif escolha == "6":
-                break
-
-            else:
-                print("\nOpção inválida. Tente novamente.")
-
-        conn.close()
+    def gerar_relatorio(self):
+        root = tk.Toplevel(self.root)
+        relatorio_view = RelatorioView(root)
+        
+    def consultar_estoque(self):
+        root = tk.Toplevel(self.root)
+        estoque_view = EstoqueView(root)
 
 if __name__ == "__main__":
-    main()
+    root = tk.Tk()
+    app = MainApp(root)
+    root.mainloop()
